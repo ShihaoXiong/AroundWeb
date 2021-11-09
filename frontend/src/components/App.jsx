@@ -5,17 +5,24 @@ import { TOKEN_KEY } from '../constants';
 import '../styles/App.css';
 
 function App() {
-	const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem(TOKEN_KEY) ? true : false);
+	const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem(TOKEN_KEY) ? true : false);
 
 	const logout = () => {
-		localStorage.removeItem(TOKEN_KEY);
+		sessionStorage.removeItem(TOKEN_KEY);
 		setIsLoggedIn(false);
+	};
+
+	const loggedIn = token => {
+		if (token) {
+			sessionStorage.setItem(TOKEN_KEY, token);
+			setIsLoggedIn(true);
+		}
 	};
 
 	return (
 		<div className='App'>
 			<TopBar isLoggedIn={isLoggedIn} handleLogout={logout} />
-			<Main />
+			<Main isLoggedIn={isLoggedIn} handleLoggedIn={loggedIn} />
 		</div>
 	);
 }

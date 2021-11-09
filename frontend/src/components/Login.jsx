@@ -1,18 +1,18 @@
 import React from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import http from '../http';
+import http from '../service';
+import { Link } from 'react-router-dom';
 
-const Login = () => {
-	const onFinish = values => {
+const Login = ({ handleLoggedIn }) => {
+	const onFinish = params => {
 		http
-			.post('/signin', values)
+			.post('/signin', params)
 			.then(res => {
-				console.log(res);
+				handleLoggedIn(res);
+				message.success('Login succssfully!');
 			})
-			.catch(err => {
-				console.log(err);
-			});
+			.catch(_ => message.error('Login failed!'));
 	};
 
 	return (
@@ -28,7 +28,7 @@ const Login = () => {
 				<Button type='primary' htmlType='submit' className='login-form-button'>
 					Log in
 				</Button>
-				Or <a href=''>register now!</a>
+				Or <Link to='/register'>register now!</Link>
 			</Form.Item>
 		</Form>
 	);
