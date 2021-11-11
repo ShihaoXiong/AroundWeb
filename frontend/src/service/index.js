@@ -29,12 +29,14 @@ instance.interceptors.response.use(
 );
 
 const http = METHODS.reduce((pre, key) => {
-	pre[key] = (url, data) => {
+	pre[key] = (url, data, func) => {
 		const requestData = {
 			method: key,
 			url,
 			[key === 'get' ? 'params' : 'data']: data
 		};
+
+		func && func(instance);
 
 		return instance
 			.request(requestData)
