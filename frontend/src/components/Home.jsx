@@ -79,7 +79,14 @@ const Home = () => {
 		setSearchOption({ type, keyword });
 	};
 
-	const operations = <CreatePostButton />;
+	const showPost = postType => {
+		setActiveTab(postType);
+		setTimeout(() => {
+			setSearchOption({ type: SEARCH_KEY.all, keyword: '' });
+		}, 3000);
+	};
+
+	const operations = <CreatePostButton onShowPost={showPost} />;
 	return (
 		<div>
 			<SearchBar handleSearch={handleSearch} />
