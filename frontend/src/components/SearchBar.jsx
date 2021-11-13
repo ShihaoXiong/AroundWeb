@@ -3,7 +3,7 @@ import { Input, Radio } from 'antd';
 import { SEARCH_KEY } from '../constants';
 const { Search } = Input;
 
-const SearchBar = () => {
+const SearchBar = props => {
 	const [searchType, setSearchType] = useState(SEARCH_KEY.all);
 	const [error, setError] = useState('');
 
@@ -14,11 +14,16 @@ const SearchBar = () => {
 		}
 
 		setError('');
+		props.handleSearch({ type: searchType, keyword: value });
 	};
 
 	const changeSearchType = event => {
+		const searchType = event.target.value;
 		setError('');
-		setSearchType(event.target.value);
+		setSearchType(searchType);
+		if (searchType === SEARCH_KEY.all) {
+			props.handleSearch({ type: searchType, keyword: '' });
+		}
 	};
 
 	return (

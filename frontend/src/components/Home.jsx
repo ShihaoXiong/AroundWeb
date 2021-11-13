@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import SearchBar from './SearchBar';
 import PhotoGallery from './PhotoGallery';
-import { Button, message, Tabs, Row, Col } from 'antd';
+import { message, Tabs, Row, Col } from 'antd';
 import { SEARCH_KEY, TOKEN_KEY } from '../constants';
 import http from '../service';
+import CreatePostButton from './CreatePostButton';
 const { TabPane } = Tabs;
 
 const Home = () => {
@@ -15,13 +16,18 @@ const Home = () => {
 	});
 
 	useEffect(() => {
-		const { type } = searchOption;
-		const params = type !== SEARCH_KEY.all ? { [type]: type } : null;
+		const { type, keyword } = searchOption;
+		let prop;
+		if (type === SEARCH_KEY.user) {
+			prop = 'user';
+		} else if (type === SEARCH_KEY.keyword) {
+			prop = 'keywords';
+		}
+		const params = prop ? { [prop]: keyword } : null;
 		http
 			.get('/search', params, instance => {
 				instance.interceptors.request.use(config => {
 					config.headers.Authorization = `Bearer ${sessionStorage.getItem(TOKEN_KEY)}`;
-					type !== SEARCH_KEY.all && (config.params = { [type]: type });
 
 					return config;
 				});
@@ -68,10 +74,15 @@ const Home = () => {
 		}
 	};
 
-	const operations = <Button>button</Button>;
+	const handleSearch = options => {
+		const { type, keyword } = options;
+		setSearchOption({ type, keyword });
+	};
+
+	const operations = <CreatePostButton />;
 	return (
 		<div>
-			<SearchBar />
+			<SearchBar handleSearch={handleSearch} />
 			<div className='display'>
 				<Tabs defaultActiveKey={activeTab} onChange={key => setActiveTab(key)} tabBarExtraContent={operations}>
 					<TabPane tab='Images' key='image'>

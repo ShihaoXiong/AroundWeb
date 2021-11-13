@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Gallery from 'react-grid-gallery';
 import PropTypes from 'prop-types';
-import { Button, message } from 'antd';
+import { message } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import http from '../service';
 import { TOKEN_KEY } from '../constants';
@@ -56,6 +56,10 @@ const PhotoGallery = props => {
 
 	const onCurrentImageChange = index => setCurImgIdx(index);
 
+	useEffect(() => {
+		setImages(props.images);
+	}, [props.images]);
+
 	return (
 		<div style={wrapperStyle}>
 			<Gallery
@@ -64,7 +68,7 @@ const PhotoGallery = props => {
 				backdropClosesModal={true}
 				currentImageWillChange={onCurrentImageChange}
 				customControls={[
-					<Button
+					<button
 						style={{ marginTop: '10px', marginLeft: '5px' }}
 						key='deleteImage'
 						type='primary'
@@ -73,7 +77,7 @@ const PhotoGallery = props => {
 						onClick={onDeleteImage}
 					>
 						Delete Image
-					</Button>
+					</button>
 				]}
 			/>
 		</div>
